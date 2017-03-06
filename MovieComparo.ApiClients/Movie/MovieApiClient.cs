@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MovieComparo.ApiClients.Base;
 using MovieComparo.Config;
 using MovieComparo.Models.Movie;
+using Newtonsoft.Json;
 
 namespace MovieComparo.ApiClients.Movie
 {
@@ -65,7 +66,16 @@ namespace MovieComparo.ApiClients.Movie
                         {
                             using (HttpContent content = response.Content)
                             {
-                                return Task.FromResult(content.ReadAsAsync<MovieDetail>().Result);
+                                // http://stackoverflow.com/questions/12754463/json-net-ignore-property-during-deserialization
+                                var jsonResponseString = response.Content.ReadAsStringAsync();
+                                jsonResponseString.Wait();
+                                var jsonSerializerSettings = new JsonSerializerSettings
+                                {
+                                    MissingMemberHandling = MissingMemberHandling.Ignore
+                                };
+                                var jsonObject = JsonConvert.DeserializeObject<MovieDetail>(jsonResponseString.Result, jsonSerializerSettings);
+
+                                return Task.FromResult(jsonObject);
                             }
                         }
                     }

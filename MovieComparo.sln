@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieComparo.ApiClients", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieComparo.Config", "MovieComparo.Config\MovieComparo.Config.csproj", "{843FD79C-AC66-4107-9788-3B1940598514}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieComparo.Services.Tests", "Tests\MovieComparo.Service.Tests\MovieComparo.Services.Tests.csproj", "{73FBEF5E-4D41-4491-944B-9533659DFF5F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{843FD79C-AC66-4107-9788-3B1940598514}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{843FD79C-AC66-4107-9788-3B1940598514}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{843FD79C-AC66-4107-9788-3B1940598514}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73FBEF5E-4D41-4491-944B-9533659DFF5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73FBEF5E-4D41-4491-944B-9533659DFF5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73FBEF5E-4D41-4491-944B-9533659DFF5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73FBEF5E-4D41-4491-944B-9533659DFF5F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

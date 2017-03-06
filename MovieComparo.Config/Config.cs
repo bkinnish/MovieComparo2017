@@ -23,7 +23,7 @@
 
         public int ApiTimeout
         {
-            get { return 200; }
+            get { return 1000; }
         }
 
         public string Provider1Name

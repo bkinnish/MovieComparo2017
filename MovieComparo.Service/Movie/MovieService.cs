@@ -65,7 +65,7 @@ namespace MovieComparo.Service.Movie
             }
             if (provider2Task?.Result != null)
             {
-                movies = provider2Task.Result.Movies.Where(m => m.Title.IndexOf(term, StringComparison.InvariantCultureIgnoreCase) >= 0).ToList();
+                movies.AddRange(provider2Task.Result.Movies.Where(m => m.Title.IndexOf(term, StringComparison.InvariantCultureIgnoreCase) >= 0).ToList());
             }
 
             return movies;
@@ -76,7 +76,7 @@ namespace MovieComparo.Service.Movie
         /// </summary>
         /// <param name="id">A movie id </param>
         /// <returns>Movie details</returns>
-        public List<MovieDetail> GetMovieDetails(string id)
+        public MovieDetail GetMovieDetails(string id)
         {
             if (id == null)
             {
@@ -88,8 +88,10 @@ namespace MovieComparo.Service.Movie
 
             try
             {
-                provider1Task = _apiClientProvider1.GetDetail(id);
-                provider2Task = _apiClientProvider2.GetDetail(id);
+                if (id.StartsWith("cw"))
+                    provider1Task = _apiClientProvider1.GetDetail(id);
+                else
+                    provider2Task = _apiClientProvider2.GetDetail(id);
                 Task.WaitAll();
             }
             catch (Exception ex)
@@ -97,36 +99,37 @@ namespace MovieComparo.Service.Movie
                 Debug.WriteLine(ex);
             }
 
-            List<MovieDetail> movieDetails = new List<MovieDetail>();
             if (provider1Task?.Result != null)
             {
                 provider1Task.Result.Provider = _config.Provider1Name;
-                movieDetails.Add(provider1Task.Result);
+                return provider1Task.Result;
             }
             if (provider2Task?.Result != null)
             {
                 provider2Task.Result.Provider = _config.Provider2Name;
-                movieDetails.Add(provider2Task.Result);
+                return provider2Task.Result;
             }
-            return movieDetails;
+            return null;
         }
 
-        public List<MoviePriceInfo> GetMoviePrices(string id)
+        public List<MoviePriceInfo> GetMoviePrices(string title)
         {
-            if (id == null)
+            if (title == null)
             {
-                throw new ArgumentNullException(nameof(id));
+                throw new ArgumentNullException(nameof(title));
             }
-
-            var movieDetails = GetMovieDetails(id);
-
             var moviePrices = new List<MoviePriceInfo>();
-            foreach (var movieDetail in movieDetails)
+
+            var movies = GetMovies(title);
+            foreach (var movie in movies)
             {
-                moviePrices.Add(new MoviePriceInfo(movieDetail));
+                var movieDetail = GetMovieDetails(movie.ID);
+                if (movieDetail != null)
+                {
+                    moviePrices.Add(new MoviePriceInfo(movieDetail));
+                }
             }
             return moviePrices;
         }
-
     }
 }

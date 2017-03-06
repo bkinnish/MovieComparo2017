@@ -79,7 +79,7 @@ function displayMovieDetails(movie) {
         type: "GET",
         url: baseUrl + "/Compare/GetMoviePrices",
         data: {
-            id: movie.id
+            title: movie.value
         },
         timeout: 10000,
         contentType: "application/json; charset=utf-8",
@@ -89,11 +89,11 @@ function displayMovieDetails(movie) {
 
             if (jsonObj[0]) {
                 $("#provider1").text(jsonObj[0].provider);
-                $("#price1").text(jsonObj[0].price);
+                $("#price1").text("$" + jsonObj[0].price);
             }
             if (jsonObj[1]) {
                 $("#provider2").text(jsonObj[1].provider);
-                $("#price2").text(jsonObj[1].price);
+                $("#price2").text("$" + jsonObj[1].price);
             }
             if (!jsonObj[0] && !(jsonObj[1])) {
                 $("#message").text("No pricing was found at this time.");
