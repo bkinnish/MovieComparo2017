@@ -18,12 +18,12 @@
 
         public int ApiMaxRetries
         {
-            get { return 5; }
+            get { return 3; }
         }
 
         public int ApiTimeout
         {
-            get { return 1000; }
+            get { return 200; }
         }
 
         public string Provider1Name

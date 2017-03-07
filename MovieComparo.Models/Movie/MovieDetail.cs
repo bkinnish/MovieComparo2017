@@ -3,7 +3,7 @@
     /// <summary>
     /// http://webjetapitest.azurewebsites.net/api/cinemaworld/movie/cw0076759
     /// </summary>
-    public class MovieDetail
+    public class MovieDetail : IMovieProvider
     {
         // eg. "Title": "Star Wars: Episode IV - A New Hope"
         public string Title { get; set; }
@@ -47,6 +47,6 @@
         public string Price { get; set; }
 
         // eg. "cinemaworld" or "filmworld"
-        public string Provider { get; set; }
+        public MovieProvider Provider { get; set; }
     }
 }

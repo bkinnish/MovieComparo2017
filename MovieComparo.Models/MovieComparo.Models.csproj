@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MovieProvider.cs" />
+    <Compile Include="Movie\IMovieProvider.cs" />
     <Compile Include="Movie\Movie.cs" />
     <Compile Include="Movie\MovieDetail.cs" />
     <Compile Include="Movie\MoviePriceInfo.cs" />

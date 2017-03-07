@@ -45,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\ICacheService.cs" />
+    <Compile Include="Helpers\CacheService.cs" />
     <Compile Include="Movie\IMovieService.cs" />
     <Compile Include="Movie\MovieService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

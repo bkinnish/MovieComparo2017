@@ -4,7 +4,7 @@
     {
         public MoviePriceInfo(MovieDetail movieDetail)
         {
-            Provider = movieDetail.Provider;
+            Provider = movieDetail.Provider.ToString();
             ID = movieDetail.ID;
             Price = movieDetail.Price;
         }

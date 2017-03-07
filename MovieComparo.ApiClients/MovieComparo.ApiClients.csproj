@@ -66,6 +66,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\ApiClientBase.cs" />
+    <Compile Include="Factories\IMovieProviderApiClientFactory.cs" />
+    <Compile Include="Factories\MovieProviderApiClientFactory.cs" />
     <Compile Include="Movie\IMovieApiClient.cs" />
     <Compile Include="Movie\MovieApiClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

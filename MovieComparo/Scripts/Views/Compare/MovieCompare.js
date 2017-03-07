@@ -81,7 +81,7 @@ function displayMovieDetails(movie) {
         data: {
             title: movie.value
         },
-        timeout: 10000,
+        timeout: 30000,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data) {
