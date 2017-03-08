@@ -23,17 +23,7 @@
 
         public int ApiTimeout
         {
-            get { return 200; }
-        }
-
-        public string Provider1Name
-        {
-            get { return "cinemaworld"; }
-        }
-
-        public string Provider2Name
-        {
-            get { return "filmworld"; }
+            get { return 150; }
         }
     }
 }

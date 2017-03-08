@@ -10,26 +10,26 @@ namespace MovieComparo.ApiClients.Factories
     /// </summary>
     public class MovieProviderApiClientFactory : IMovieProviderApiClientFactory
     {
-        private IConfig _config;
+        private readonly IConfig _config;
 
         public MovieProviderApiClientFactory(IConfig config)
         {
             _config = config;
         }
 
-        public MovieApiClient Create(MovieProvider provider)
+        public IMovieApiClient Create(MovieProvider provider)
         {
             MovieApiClient apiClient;
             switch (provider)
             {
                 case MovieProvider.cinemaworld:
                 {
-                    apiClient = new MovieApiClient(_config.ApiAddress, _config.AccessToken, MovieProvider.cinemaworld, _config);
+                    apiClient = new MovieApiClient(_config.ApiAddress, _config.AccessToken, MovieProvider.cinemaworld);
                     break;
                 }
                 case MovieProvider.filmworld:
                 {
-                    apiClient = new MovieApiClient(_config.ApiAddress, _config.AccessToken, MovieProvider.filmworld, _config);
+                    apiClient = new MovieApiClient(_config.ApiAddress, _config.AccessToken, MovieProvider.filmworld);
                     break;
                 }
                 default:
@@ -41,11 +41,13 @@ namespace MovieComparo.ApiClients.Factories
             return apiClient;
         }
         
-        public List<MovieApiClient> CreateAll()
+        public List<IMovieApiClient> CreateAll()
         {
-            var providers = new List<MovieApiClient>();
-            providers.Add(Create(MovieProvider.cinemaworld));
-            providers.Add(Create(MovieProvider.filmworld));
+            var providers = new List<IMovieApiClient>
+            {
+                Create(MovieProvider.cinemaworld),
+                Create(MovieProvider.filmworld)
+            };
             return providers;
         }
     }

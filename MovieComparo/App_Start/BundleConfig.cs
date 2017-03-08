@@ -48,6 +48,9 @@ namespace MovieComparo
                           "~/Content/themes/base/jquery.ui.core.css",
                           "~/Content/themes/base/jquery.ui.autocomplete.css",
                           "~/Content/themes/base/jquery.ui.theme.css"));
+
+            bundles.Add(new Bundle("~/Scripts/Views/Compare/movieCompare").Include(
+                        "~/Scripts/Views/Compare/movieCompare.js"));
         }
     }
 }

@@ -65,9 +65,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="JsonFiles\MovieDetailTestData.Json" />
+    <None Include="JsonFiles\MovieSummaryTestData.Json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\MovieComparo.ApiClients\MovieComparo.ApiClients.csproj">
+      <Project>{8C832C90-D705-4C34-BAB3-0DF608F70EA4}</Project>
+      <Name>MovieComparo.ApiClients</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MovieComparo.Config\MovieComparo.Config.csproj">
+      <Project>{843FD79C-AC66-4107-9788-3B1940598514}</Project>
+      <Name>MovieComparo.Config</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\MovieComparo.Models\MovieComparo.Models.csproj">
       <Project>{d1c61179-70a8-4bc0-ae31-ad9aea0e83e6}</Project>
       <Name>MovieComparo.Models</Name>

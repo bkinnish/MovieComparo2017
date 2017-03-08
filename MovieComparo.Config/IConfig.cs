@@ -6,7 +6,5 @@
         string AccessToken { get; }
         int ApiMaxRetries { get; }
         int ApiTimeout { get; }
-        string Provider1Name { get; }
-        string Provider2Name { get; }
     }
 }

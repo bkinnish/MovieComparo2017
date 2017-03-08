@@ -13,8 +13,9 @@ namespace MovieComparo.Service.Movie
     public class MovieService : IMovieService
     {
         private readonly IMovieProviderApiClientFactory _apiClientProviderFactory;
-        private IConfig _config;
+        private readonly IConfig _config;
         private readonly ICacheService _cacheService;
+        private readonly Retry _retry;
 
         #region Constructors
 
@@ -34,6 +35,7 @@ namespace MovieComparo.Service.Movie
             _apiClientProviderFactory = apiClientProviderFactory;
             _config = config;
             _cacheService = cacheService;
+            _retry = new Retry();
         }
 
         #endregion Constructors
@@ -49,19 +51,37 @@ namespace MovieComparo.Service.Movie
             var movies = new ConcurrentBag<MovieSummary>();
             var summaryModelName = nameof(MovieSummary);
 
-            Parallel.ForEach(movieProviderApiClients, providerApiClient =>
+            try
             {
-                var providerMovieHeader = _cacheService.GetOrSet<MovieHeader>(summaryModelName, providerApiClient.Provider.ToString(), () => providerApiClient.GetSummary());
+                Parallel.ForEach(movieProviderApiClients, apiClient =>
+                {
 
-                if (providerMovieHeader != null && providerMovieHeader.Movies.Any())
-                { 
-                    var movieSelection = providerMovieHeader.Movies.Where(m => m.Title.IndexOf(term, StringComparison.InvariantCultureIgnoreCase) >= 0).ToList();
-                    foreach (var movie in movieSelection)
+                    try
                     {
-                        movies.Add(movie);
+                        var providerMovieHeader = _cacheService.Get<MovieHeader>(summaryModelName,
+                                apiClient.Provider.ToString(), 
+                                () => _retry.Run<MovieHeader>(apiClient.GetSummary, TimeSpan.FromSeconds(1), _config.ApiMaxRetries));
+
+                        if (providerMovieHeader != null && providerMovieHeader.Movies.Any())
+                        { 
+                            var movieSelection = providerMovieHeader.Movies.Where(m => m.Title.IndexOf(term, StringComparison.InvariantCultureIgnoreCase) >= 0).ToList();
+                            foreach (var movie in movieSelection)
+                            {
+                                movies.Add(movie);
+                            }
+                        }
                     }
-                }
-            });
+                    catch (AggregateException ex)
+                    {
+                        Console.WriteLine(ex);
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                // Log the error somewhere and continue. Some data may be available.
+                Console.WriteLine(ex.ToString());
+            }
 
             return movies.ToList();
         }
@@ -79,19 +99,36 @@ namespace MovieComparo.Service.Movie
 
             var movies = GetMovies(title).AsReadOnly();
 
-            Parallel.ForEach(movieProviderApiClients, providerApiClient =>
+            try
             {
-                foreach (var movie in movies)
+                Parallel.ForEach(movieProviderApiClients, apiClient =>
                 {
-                    var movieDetail = _cacheService.GetOrSet<MovieDetail>(detailModelName, movie.ID,
-                            () => providerApiClient.GetDetail(movie.ID));
-
-                    if (movieDetail != null)
+                    foreach (var movie in movies.Where(m => m.Provider == apiClient.Provider))
                     {
-                        moviePrices.Add(new MoviePriceInfo(movieDetail));
+                        try
+                        {
+                            var movieId = movie.ID;
+                            var movieDetail = _cacheService.Get<MovieDetail>(detailModelName, movieId,
+                                    () => _retry.Run<MovieDetail>(() => apiClient.GetDetail(movieId), 
+                                                    TimeSpan.FromSeconds(1), _config.ApiMaxRetries));
+
+                            if (movieDetail != null)
+                            {
+                                moviePrices.Add(new MoviePriceInfo(movieDetail));
+                            }
+                        }
+                        catch (AggregateException ex)
+                        {
+                            Console.WriteLine(ex);
+                        }
                     }
-                }
-            });
+                });
+            }
+            catch (Exception ex)
+            {
+                // Log the error somewhere and continue. Some data may be available.
+                Console.WriteLine(ex.ToString());
+            }
 
             return moviePrices.ToList();
         }

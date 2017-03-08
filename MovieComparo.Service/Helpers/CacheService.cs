@@ -18,18 +18,24 @@ namespace MovieComparo.Service.Helpers
         /// <param name="modelName">Model Name (ie nameof(MovieSummary))</param>
         /// <param name="cacheKey">unique identifier (ie id)</param>
         /// <param name="service">The service to lookup data if it is not in the cache.</param>
+        /// <param name="cachePolicy">Apply custom Memory Cache settings (Defaults to expire in 10 minutes)</param>
         /// <returns>Data that has been loaded</returns>
-        public T GetOrSet<T>(string modelName, string cacheKey, Func<T> service) where T : class
+        public T Get<T>(string modelName, string cacheKey, Func<T> service, CacheItemPolicy cachePolicy = null) 
+            where T : class
         {
             var combinedCacheKey = modelName + cacheKey;
             T item = MemoryCache.Default.Get(combinedCacheKey) as T;
             if (item == null)
             {
-                // TODO: Could do with a thread lock to control multiple updates at once on multiple threads.
+                // TODO: Could have with a thread lock to control multiple gets at once on multiple threads.
                 item = service();
                 if (item != null)
                 {
-                    MemoryCache.Default.Add(combinedCacheKey, item, DateTime.Now.AddMinutes(10));
+                    if (cachePolicy == null)
+                    {
+                        cachePolicy = new CacheItemPolicy { AbsoluteExpiration = DateTime.Now.AddMinutes(10) };
+                    }
+                    MemoryCache.Default.Add(combinedCacheKey, item, cachePolicy);
                 }
             }
             return item;

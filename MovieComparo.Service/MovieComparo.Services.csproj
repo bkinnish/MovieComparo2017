@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Helpers\ICacheService.cs" />
     <Compile Include="Helpers\CacheService.cs" />
+    <Compile Include="Helpers\Retry.cs" />
     <Compile Include="Movie\IMovieService.cs" />
     <Compile Include="Movie\MovieService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -67,8 +68,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="MovieDetailTestData.Json" />
-    <None Include="MovieTestData.Json" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Runtime.Caching;
 
 namespace MovieComparo.Service.Helpers
 {
     public interface ICacheService
     {
-        T GetOrSet<T>(string cacheKey, string id, Func<T> service) where T : class;
+        T Get<T>(string cacheKey, string id, Func<T> service, CacheItemPolicy cachePolicy = null) where T : class;
     }
 }

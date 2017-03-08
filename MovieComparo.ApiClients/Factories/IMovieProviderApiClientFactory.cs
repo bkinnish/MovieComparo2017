@@ -7,7 +7,7 @@ namespace MovieComparo.ApiClients.Factories
 {
     public interface IMovieProviderApiClientFactory
     {
-        MovieApiClient Create(MovieProvider provider);
-        List<MovieApiClient> CreateAll();
+        IMovieApiClient Create(MovieProvider provider);
+        List<IMovieApiClient> CreateAll();
     }
 }
