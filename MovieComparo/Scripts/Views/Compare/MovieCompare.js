@@ -30,6 +30,7 @@ $(document).ready(function () {
 });
 
 function getMoviesSummary(request, response) {
+    $("#message").text("");
     var baseUrl = window.location.protocol + "//" + window.location.host;  // Could just use '@Url.Action("GetMoviesSummary")'
     var term = request;
 

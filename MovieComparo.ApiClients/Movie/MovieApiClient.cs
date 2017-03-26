@@ -27,51 +27,46 @@ namespace MovieComparo.ApiClients.Movie
         {
             using (HttpResponseMessage response = Client.GetAsync($"api/{Provider}/movies").Result)
             {
-                if (response.IsSuccessStatusCode)
+                response.EnsureSuccessStatusCode();
+
+                using (HttpContent content = response.Content)
                 {
-                    using (HttpContent content = response.Content)
+                    var jsonResponseString = content.ReadAsStringAsync();
+                    jsonResponseString.Wait();
+                    var jsonSerializerSettings = new JsonSerializerSettings
                     {
-                        var jsonResponseString = content.ReadAsStringAsync();
-                        jsonResponseString.Wait();
-                        var jsonSerializerSettings = new JsonSerializerSettings
-                        {
-                            MissingMemberHandling = MissingMemberHandling.Ignore
-                        };
-                        var jsonObject = JsonConvert.DeserializeObject<MovieHeader>(jsonResponseString.Result, jsonSerializerSettings);
-                        foreach (var movie in jsonObject.Movies)
-                        {
-                            movie.Provider = Provider;
-                        }
-                        return jsonObject;
+                        MissingMemberHandling = MissingMemberHandling.Ignore
+                    };
+                    var jsonObject = JsonConvert.DeserializeObject<MovieHeader>(jsonResponseString.Result, jsonSerializerSettings);
+                    foreach (var movie in jsonObject.Movies)
+                    {
+                        movie.Provider = Provider;
                     }
+                    return jsonObject;
                 }
             }
-
-            return default(MovieHeader);
         }
 
         public MovieDetail GetDetail(string id)
         {
             using (HttpResponseMessage response = Client.GetAsync($"api/{Provider}/movie/{id}").Result)
             {
-                if (response.IsSuccessStatusCode)
+                response.EnsureSuccessStatusCode();
+
+                using (HttpContent content = response.Content)
                 {
-                    using (HttpContent content = response.Content)
+                    // http://stackoverflow.com/questions/12754463/json-net-ignore-property-during-deserialization
+                    var jsonResponseString = content.ReadAsStringAsync();
+                    jsonResponseString.Wait();
+                    var jsonSerializerSettings = new JsonSerializerSettings
                     {
-                        // http://stackoverflow.com/questions/12754463/json-net-ignore-property-during-deserialization
-                        var jsonResponseString = content.ReadAsStringAsync();
-                        jsonResponseString.Wait();
-                        var jsonSerializerSettings = new JsonSerializerSettings
-                        {
-                            MissingMemberHandling = MissingMemberHandling.Ignore
-                        };
-                        var jsonObject = JsonConvert.DeserializeObject<MovieDetail>(jsonResponseString.Result, jsonSerializerSettings);
-                        jsonObject.Provider = Provider;
-                        return jsonObject;
-                    }
+                        MissingMemberHandling = MissingMemberHandling.Ignore
+                    };
+                    var jsonObject = JsonConvert.DeserializeObject<MovieDetail>(jsonResponseString.Result, jsonSerializerSettings);
+                    jsonObject.Provider = Provider;
+                    return jsonObject;
                 }
             }
-            return default(MovieDetail);
         }
 
     }

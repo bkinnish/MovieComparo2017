@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Microsoft.Ajax.Utilities;
+using MovieComparo.Models;
 using MovieComparo.Service.Movie;
 using Newtonsoft.Json;
 
@@ -38,11 +39,12 @@ namespace MovieComparo.Controllers
         public ActionResult GetMoviesSummary(string term)
         {
             var movieNames = _movieService.GetMovies(term).DistinctBy(m => m.Title).Select(movie =>
-                new {
-                    title = movie.Title,
-                    id = movie.ID,
-                    year = movie.Year,
-                    poster = movie.Poster
+                new MovieSummaryMovieSummary()
+                {
+                    Title = movie.Title,
+                    ID = movie.ID,
+                    Year = movie.Year,
+                    Poster = movie.Poster
                 }).ToList();
             var movieJson = JsonConvert.SerializeObject(movieNames);
 
@@ -56,15 +58,9 @@ namespace MovieComparo.Controllers
         /// <returns>Movie summary as Json</returns>
         public ActionResult GetMoviePrices(string title)
         {
-            var test = Request.QueryString;
+            //var queryString = Request.QueryString;
 
-
-            var moviePrices = _movieService.GetMoviePrices(title).Select(movie =>
-                new {
-                    provider = movie.Provider,
-                    id = movie.ID,
-                    price = movie.Price
-                }).ToList();
+            var moviePrices = _movieService.GetMoviePrices(title).ToList();
             var movieJson = JsonConvert.SerializeObject(moviePrices);
 
             return Json(movieJson, JsonRequestBehavior.AllowGet);

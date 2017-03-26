@@ -60,7 +60,7 @@ namespace MovieComparo.Service.Movie
                     {
                         var providerMovieHeader = _cacheService.Get<MovieHeader>(summaryModelName,
                                 apiClient.Provider.ToString(), 
-                                () => _retry.Run<MovieHeader>(apiClient.GetSummary, TimeSpan.FromSeconds(1), _config.ApiMaxRetries));
+                                () => _retry.Run<MovieHeader>(apiClient.GetSummary, TimeSpan.FromMilliseconds(_config.ApiTimeout), _config.ApiMaxRetries));
 
                         if (providerMovieHeader != null && providerMovieHeader.Movies.Any())
                         { 
@@ -109,8 +109,8 @@ namespace MovieComparo.Service.Movie
                         {
                             var movieId = movie.ID;
                             var movieDetail = _cacheService.Get<MovieDetail>(detailModelName, movieId,
-                                    () => _retry.Run<MovieDetail>(() => apiClient.GetDetail(movieId), 
-                                                    TimeSpan.FromSeconds(1), _config.ApiMaxRetries));
+                                    () => _retry.Run<MovieDetail>(() => apiClient.GetDetail(movieId),
+                                                    TimeSpan.FromMilliseconds(_config.ApiTimeout), _config.ApiMaxRetries));
 
                             if (movieDetail != null)
                             {

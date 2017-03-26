@@ -18,12 +18,12 @@
 
         public int ApiMaxRetries
         {
-            get { return 3; }
+            get { return 2; }
         }
 
         public int ApiTimeout
         {
-            get { return 150; }
+            get { return 100; }
         }
     }
 }

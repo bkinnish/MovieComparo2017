@@ -20,7 +20,7 @@ namespace MovieComparo.ApiClients.Base
             }
 
             Client = new HttpClient();
-            Client.Timeout = TimeSpan.FromMilliseconds(500);
+            Client.Timeout = TimeSpan.FromMilliseconds(1000);
             Client.BaseAddress = new Uri(apiAddress);
             Client.DefaultRequestHeaders.Accept.Clear();
             Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

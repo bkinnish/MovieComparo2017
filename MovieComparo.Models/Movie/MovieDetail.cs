@@ -1,4 +1,6 @@
-﻿namespace MovieComparo.Models.Movie
+﻿using Newtonsoft.Json;
+
+namespace MovieComparo.Models.Movie
 {
     /// <summary>
     /// http://webjetapitest.azurewebsites.net/api/cinemaworld/movie/cw0076759
@@ -47,6 +49,7 @@
         public string Price { get; set; }
 
         // eg. "cinemaworld" or "filmworld"
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public MovieProvider Provider { get; set; }
     }
 }
