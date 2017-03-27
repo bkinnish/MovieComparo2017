@@ -21,7 +21,7 @@
             get { return 2; }
         }
 
-        public int ApiTimeout
+        public int ApiRetryInterval
         {
             get { return 100; }
         }

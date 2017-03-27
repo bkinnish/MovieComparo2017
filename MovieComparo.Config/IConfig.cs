@@ -5,6 +5,6 @@
         string ApiAddress { get; }
         string AccessToken { get; }
         int ApiMaxRetries { get; }
-        int ApiTimeout { get; }
+        int ApiRetryInterval { get; }
     }
 }
