@@ -27,23 +27,12 @@ namespace MovieComparo.ApiClients.Movie
         {
             using (HttpResponseMessage response = Client.GetAsync($"api/{Provider}/movies").Result)
             {
-                response.EnsureSuccessStatusCode();
-
-                using (HttpContent content = response.Content)
+                var jsonObject = ParseResponseContent<MovieHeader>(response);
+                foreach (var movie in jsonObject.Movies)
                 {
-                    var jsonResponseString = content.ReadAsStringAsync();
-                    jsonResponseString.Wait();
-                    var jsonSerializerSettings = new JsonSerializerSettings
-                    {
-                        MissingMemberHandling = MissingMemberHandling.Ignore
-                    };
-                    var jsonObject = JsonConvert.DeserializeObject<MovieHeader>(jsonResponseString.Result, jsonSerializerSettings);
-                    foreach (var movie in jsonObject.Movies)
-                    {
-                        movie.Provider = Provider;
-                    }
-                    return jsonObject;
+                    movie.Provider = Provider;
                 }
+                return jsonObject;
             }
         }
 
@@ -51,21 +40,26 @@ namespace MovieComparo.ApiClients.Movie
         {
             using (HttpResponseMessage response = Client.GetAsync($"api/{Provider}/movie/{id}").Result)
             {
-                response.EnsureSuccessStatusCode();
+                var jsonObject = ParseResponseContent<MovieDetail>(response);
+                jsonObject.Provider = Provider;
+                return jsonObject;
+            }
+        }
 
-                using (HttpContent content = response.Content)
+        private T ParseResponseContent<T>(HttpResponseMessage response)
+        {
+            response.EnsureSuccessStatusCode();
+
+            using (HttpContent content = response.Content)
+            {
+                var jsonResponseString = content.ReadAsStringAsync();
+                jsonResponseString.Wait();
+                var jsonSerializerSettings = new JsonSerializerSettings
                 {
-                    // http://stackoverflow.com/questions/12754463/json-net-ignore-property-during-deserialization
-                    var jsonResponseString = content.ReadAsStringAsync();
-                    jsonResponseString.Wait();
-                    var jsonSerializerSettings = new JsonSerializerSettings
-                    {
-                        MissingMemberHandling = MissingMemberHandling.Ignore
-                    };
-                    var jsonObject = JsonConvert.DeserializeObject<MovieDetail>(jsonResponseString.Result, jsonSerializerSettings);
-                    jsonObject.Provider = Provider;
-                    return jsonObject;
-                }
+                    MissingMemberHandling = MissingMemberHandling.Ignore
+                };
+                var jsonObject = JsonConvert.DeserializeObject<T>(jsonResponseString.Result, jsonSerializerSettings);
+                return jsonObject;
             }
         }
 
